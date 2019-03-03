@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>WebSocket Tutorial</title>
+</head>
+<body>
+<form>
+<input id="textMessage" type="text"/>
+<input onClick="sendMessage();" value="Send Message" type="button"/>
+</form>
+<br>
+<textarea id="msgtxt" rows="10" cols="50"></textarea>
+<script type="text/javascript">
+var websocket = new WebSocket("ws://localhost:12345/WebSocketEg/serverendpointdemo");
+var msgtxt=document.getElementById("msgtxt");
+websocket.onopen=function(message){processopen(message);};
+websocket.onclose=function(message){processclose(message);};
+websocket.onmessage=function(message){processmessage(message);}
+websocket.onerror=function(message){processerror(message);};
+function processopen(message){
+	msgtxt.value += "connecting Server...\n";
+}
+function processclose(message){
+	msgtxt.value += "closed...\n";
+}
+function processerror(message){
+	msgtxt.value += "error...\n";
+}
+function processmessage(message){
+	msgtxt.value += message.data + "\n";
+}
+function sendMessage(message){
+	if(textMessage.value!="close"){
+	websocket.send(textMessage.value);
+	msgtxt.value += "Send to server=>"+textMessage.value+"\n";
+	textMessage.value="";
+	}
+	else{
+		websocket.close();
+	}
+}
+</script>
+</body>
+</html>
